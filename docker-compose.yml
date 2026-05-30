@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: stockintel
+      POSTGRES_USER: stockintel
+      POSTGRES_PASSWORD: stockintel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./apps/api
+    env_file:
+      - ./apps/api/.env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg://stockintel:stockintel@postgres:5432/stockintel
+      WEB_APP_URL: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  web:
+    build:
+      context: ./apps/web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
