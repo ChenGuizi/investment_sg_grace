@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     gmail_client_secret: str | None = None
     gmail_refresh_token: str | None = None
     email_from: str = "reports@example.com"
+    daily_report_recipient: str = "guizichen2018@gmail.com"
     daily_report_hour_sgt: int = Field(default=7, ge=0, le=23)
 
     @property
